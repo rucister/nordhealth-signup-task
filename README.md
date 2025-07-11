@@ -36,6 +36,7 @@ A modern, accessible authentication system built with Nuxt 3 and the Nordhealth 
 - **Styling**: CSS with Nord design tokens
 - **Validation**: Custom composable with reactive validation
 - **State Management**: Vue 3 Composition API
+- **Testing**: Vitest + @vue/test-utils + happy-dom (46 comprehensive tests)
 
 ## Project Structure
 
@@ -146,3 +147,76 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Testing
+
+This project implements a comprehensive testing strategy with **46 tests** covering unit, component, and integration testing.
+
+### Testing Stack
+
+- **Test Runner**: Vitest (fast, modern alternative to Jest)
+- **Component Testing**: @vue/test-utils with DOM simulation via happy-dom
+- **Mocking**: Vitest's built-in mocking capabilities
+- **TypeScript**: Full TypeScript support in tests
+
+### Test Structure
+
+```
+tests/
+├── unit/                    # Unit tests (25 tests)
+│   └── validation.test.ts   # Pure validation function tests
+├── components/              # Component tests (10 tests)  
+│   └── PasswordStrength.test.ts  # Component behavior tests
+├── integration/             # Integration tests (11 tests)
+│   └── useFormValidation.test.ts  # Composable integration tests
+└── setup.ts                 # Global test configuration
+```
+
+### Running Tests
+
+```bash
+# Run all tests once
+pnpm test:run
+
+# Run tests in watch mode (during development)
+pnpm test
+
+# Run with coverage report
+pnpm test:coverage
+
+# Run with UI (coming in Phase 2)
+pnpm test:ui
+```
+
+### Test Coverage
+
+#### Unit Tests (25 tests)
+- **validateRequired**: Required field validation with custom field names
+- **validateEmail**: Email format validation with edge cases
+- **validatePassword**: Password strength validation (length, complexity)
+- **validateMinLength**: Minimum length validation
+- **validatePasswordConfirmation**: Password matching validation
+- **getPasswordStrength**: Password strength scoring (0-4 scale)
+
+#### Component Tests (10 tests)
+- **PasswordStrength Component**: 
+  - Visual strength indicators (4 bars)
+  - Dynamic color coding based on strength
+  - CSS custom properties integration
+  - Reactive password updates
+  - Nord Design System component mocking
+
+#### Integration Tests (11 tests)
+- **useFormValidation Composable**:
+  - Form state management with reactive objects
+  - Real-time validation with debouncing
+  - Error handling and clearing
+  - Individual field validation
+  - Cross-field validation (password confirmation)
+  - Edge cases and error states
+
+### Future Testing Phases
+
+- **Phase 2**: Add test coverage reporting and UI
+- **Phase 3**: End-to-end testing with Playwright (as mentioned in job requirements)
+- **Phase 4**: Visual regression testing for design system components
