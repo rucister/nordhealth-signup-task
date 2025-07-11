@@ -1,0 +1,51 @@
+/**
+ * Main CSS for Nordhealth VET Application
+ * 
+ * This file contains minimal app-specific styles
+ * Built on top of Nordhealth CSS Framework + VET Theme
+ */
+
+/* App-specific layout classes */
+
+html,
+body {
+	min-block-size: 100%;
+}
+
+body {
+	background-color: var(--n-color-surface);
+	color: var(--n-color-text);
+	margin: 0;
+	font-size: var(--n-font-size-m);
+	font-family: var(--n-font-family);
+	line-height: var(--n-line-height);
+	animation-delay: 0.05s;
+	animation-duration: 0.3s;
+	animation-fill-mode: both;
+	animation-name: fade;
+}
+
+html.unauthed,
+html.unauthed body {
+	block-size: 100%;
+	background: var(--n-color-surface-raised);
+}
+
+
+.nordhealth-app {
+	block-size: 100%;
+}
+
+main {
+	block-size: 100%;
+}
+
+.auth-stack {
+	inline-size: 90%;
+	max-inline-size: 640px;
+	margin: var(--n-space-xl) auto;
+}
+
+.provet-cloud-logo {
+	max-block-size: var(--n-space-xl);
+}

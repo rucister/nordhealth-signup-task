@@ -1,0 +1,27 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "eslint . --fix"
+  },
+  "dependencies": {
+    "@nordhealth/components": "^4.4.0",
+    "@nordhealth/css": "^4.1.0",
+    "@nordhealth/themes": "^9.0.0",
+    "@nuxt/eslint": "1.5.2",
+    "@vueuse/core": "^13.5.0",
+    "eslint": "^9.0.0",
+    "nuxt": "^3.17.6",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1"
+  },
+  "packageManager": "pnpm@8.8.0+sha1.9922e8b650d393700209ccd81e0ebdbcbe43b0d3"
+}
