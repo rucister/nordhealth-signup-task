@@ -12,8 +12,11 @@ export default defineNuxtConfig( {
 		head: {
 			htmlAttrs: {
 				class: 'n-reset'
-			}
+			},
 			// Preloading handled in useNordTheme composable using resolved URLs
+			meta: [
+				{ name: 'robots', content: 'noindex, nofollow' }
+			]
 		}
 	},
 
