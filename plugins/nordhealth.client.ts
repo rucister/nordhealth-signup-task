@@ -7,13 +7,6 @@
  * 3. TypeScript integration is configured in tsconfig.json for IntelliSense
  * 4. CSS framework and default theme loaded via nuxt.config.ts css array
  * 5. Allows flexibility to import additional components as needed
- * 
- * Features:
- * - VET light theme as default (loaded in nuxt.config.ts - no FOUC)
- * - Dynamic theme switching handled by useNordTheme composable
- * - Type safety and IntelliSense for nord-* components
- * - Client-side only rendering (CSR)
- * - Tree-shakable component imports
  */
 
 // Import base components that we want globally available
@@ -39,9 +32,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.provide('nordhealth', {
     // Theme information for dynamic theming if needed
 		theme: 'vet'
-    
-    // Future: Form validation helpers, accessibility utilities, etc.
-    // validateForm: (formData) => { ... },
-    // announceToScreenReader: (message) => { ... }
 	} )
 })
