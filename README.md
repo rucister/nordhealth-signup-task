@@ -36,7 +36,7 @@ A modern, accessible authentication system built with Nuxt 3 and the Nordhealth 
 - **Styling**: CSS with Nord design tokens
 - **Validation**: Custom composable with reactive validation
 - **State Management**: Vue 3 Composition API
-- **Testing**: Vitest + @vue/test-utils + happy-dom (46 comprehensive tests)
+- **Testing**: Vitest + @vue/test-utils + happy-dom (46 comprehensive tests with 80% coverage)
 
 ## Project Structure
 
@@ -152,12 +152,48 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 This project implements a comprehensive testing strategy with **46 tests** covering unit, component, and integration testing.
 
-### Testing Stack
+### Testing Stack & Tools
 
 - **Test Runner**: Vitest (fast, modern alternative to Jest)
 - **Component Testing**: @vue/test-utils with DOM simulation via happy-dom
+- **Coverage Reporting**: @vitest/coverage-v8 with HTML, LCOV, and JSON output
+- **Interactive UI**: @vitest/ui for real-time test visualization
 - **Mocking**: Vitest's built-in mocking capabilities
 - **TypeScript**: Full TypeScript support in tests
+- **CI/CD**: GitHub Actions with multi-node testing
+
+### Quick Commands
+
+```bash
+# Run all tests
+pnpm test
+
+# Run with coverage (80% threshold)
+pnpm test:coverage
+
+# Interactive UI interface
+pnpm test:ui
+
+# Watch mode for development
+pnpm test:watch
+
+# Targeted testing
+pnpm test:unit          # Unit tests only
+pnpm test:component     # Component tests only
+pnpm test:integration   # Integration tests only
+
+# CI mode with verbose output
+pnpm test:ci
+```
+
+### Coverage Goals & Quality Gates
+
+| Metric | Threshold | Status |
+|--------|-----------|--------|
+| Lines | 80% | ✅ |
+| Functions | 80% | ✅ | 
+| Branches | 80% | ✅ |
+| Statements | 80% | ✅ |
 
 ### Test Structure
 
@@ -172,23 +208,7 @@ tests/
 └── setup.ts                 # Global test configuration
 ```
 
-### Running Tests
-
-```bash
-# Run all tests once
-pnpm test:run
-
-# Run tests in watch mode (during development)
-pnpm test
-
-# Run with coverage report
-pnpm test:coverage
-
-# Run with UI (coming in Phase 2)
-pnpm test:ui
-```
-
-### Test Coverage
+### Test Coverage Details
 
 #### Unit Tests (25 tests)
 - **validateRequired**: Required field validation with custom field names
@@ -215,8 +235,29 @@ pnpm test:ui
   - Cross-field validation (password confirmation)
   - Edge cases and error states
 
+### CI/CD Pipeline
+
+- ✅ **Automated testing** on push/PR
+- ✅ **Multi-node testing** (Node 18.x, 20.x)
+- ✅ **Coverage reporting** with detailed metrics
+- ✅ **Quality gates** with 80% coverage minimum
+- ✅ **Build verification** after tests pass
+- ✅ **PR coverage comments** with visual diffs
+
+### Advanced Testing Features
+
+- **📊 HTML Coverage Reports** with visual highlighting
+- **🎨 Interactive Test UI** for development workflow
+- **⚡ Real-time Testing** with file watching
+- **🎯 Targeted Test Running** by category or pattern
+- **📈 Coverage Thresholds** enforcing quality standards
+- **🔧 Test Performance Metrics** and timing analysis
+
+For detailed testing documentation, see [`docs/TESTING.md`](./docs/TESTING.md).
+
 ### Future Testing Phases
 
-- **Phase 2**: Add test coverage reporting and UI
-- **Phase 3**: End-to-end testing with Playwright (as mentioned in job requirements)
-- **Phase 4**: Visual regression testing for design system components
+- **✅ Phase 1**: Unit, Component & Integration Tests (Complete)
+- **✅ Phase 2**: Coverage Reporting & CI/CD Integration (Complete)
+- **🎯 Phase 3**: End-to-end testing with Playwright (as mentioned in job requirements)
+- **🎯 Phase 4**: Visual regression testing for design system components
