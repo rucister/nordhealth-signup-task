@@ -13,9 +13,19 @@ export default defineNuxtConfig( {
 			htmlAttrs: {
 				class: 'n-reset'
 			},
-			// Preloading handled in useNordTheme composable using resolved URLs
+			// Progressive Web App and Favicon Configuration
+			link: [
+				{ rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
+				{ rel: 'icon', href: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+				{ rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
+				{ rel: 'manifest', href: '/manifest.json' }
+			],
 			meta: [
-				{ name: 'robots', content: 'noindex, nofollow' }
+				{ name: 'robots', content: 'noindex, nofollow' },
+				{ name: 'theme-color', content: '#401197' },
+				{ name: 'apple-mobile-web-app-capable', content: 'yes' },
+				{ name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+				{ name: 'apple-mobile-web-app-title', content: 'AR Signup' }
 			]
 		}
 	},
