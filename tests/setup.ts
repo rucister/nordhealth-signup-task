@@ -1,27 +1,7 @@
-// Global test setup
+// Global test setup for Nuxt environment
 import { vi } from 'vitest'
 
-// Mock Nuxt auto-imports for testing
-;(globalThis as any).navigateTo = vi.fn()
-;(globalThis as any).useRouter = vi.fn(() => ({
-  push: vi.fn(),
-  replace: vi.fn(),
-  go: vi.fn(),
-  back: vi.fn(),
-  forward: vi.fn()
-}))
-
-// Mock Vue Router for component tests
-;(globalThis as any).useRoute = vi.fn(() => ({
-  params: {},
-  query: {},
-  path: '/',
-  fullPath: '/',
-  name: null,
-  meta: {}
-}))
-
-// Setup DOM globals
+// Setup DOM globals for components that need them
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation(query => ({
@@ -35,3 +15,12 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 })
+
+// Mock console methods for cleaner test output
+Object.defineProperty( window, 'console', {
+	value: {
+		...console,
+		warn: vi.fn(),
+		error: vi.fn(),
+	},
+} )

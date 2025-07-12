@@ -1,7 +1,8 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-	<nord-input v-model="value" v-bind="$attrs" :key="showPassword.toString()"
-		:label="label" :type="showPassword ? 'text' : 'password'" expand class="password-input">
+	<nord-input v-model="value" v-bind="$attrs" :key="index.toString()"
+		:label="label" :type="showPassword ? 'text' : 'password'" expand
+		class="password-input">
 		<nord-button slot="end" variant="plain" type="button" size="s"
 			@click="togglePasswordVisibility">
 			<nord-icon

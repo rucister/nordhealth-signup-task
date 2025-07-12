@@ -38,27 +38,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Provide Nordhealth utilities globally (senior-level extensibility)
   nuxtApp.provide('nordhealth', {
     // Theme information for dynamic theming if needed
-    theme: 'vet',
-    
-    // Utility to check if component is available
-    hasComponent: (componentName: string) => {
-      return typeof customElements.get(componentName) !== 'undefined'
-    },
+		theme: 'vet'
     
     // Future: Form validation helpers, accessibility utilities, etc.
     // validateForm: (formData) => { ... },
     // announceToScreenReader: (message) => { ... }
-  })
-
-  if (import.meta.client) {
-    // Verify theme is properly loaded
-    const accentColor = getComputedStyle(document.documentElement)
-      .getPropertyValue('--n-color-accent').trim()
-    
-    if (accentColor === 'rgb(64, 17, 151)') {
-      console.log('✅ Nordhealth VET theme loaded successfully')
-    } else {
-      console.warn('⚠️ VET theme may not be loaded correctly. Expected purple accent.')
-    }
-  }
+	} )
 })

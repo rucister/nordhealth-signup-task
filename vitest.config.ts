@@ -1,11 +1,8 @@
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
-export default defineConfig({
-  plugins: [vue()],
+export default defineVitestConfig( {
   test: {
-    environment: 'happy-dom',
+		environment: 'nuxt',
     globals: true,
 		setupFiles: ['./tests/setup.ts'],
 		// Coverage configuration
@@ -23,7 +20,19 @@ export default defineConfig({
 				'tests/**',
 				'node_modules/**',
 				'.nuxt/**',
-				'public/**'
+				'public/**',
+				// Exclude Nuxt virtual modules to prevent HTML report generation errors
+				// These virtual modules (like virtual:nuxt:*) exist only in memory and have 
+				// complex encoded paths that cause file system errors on Windows when 
+				// generating HTML coverage reports
+				'**/virtual:*/**',
+				'**/*virtual*',
+				// Exclude configuration files from coverage
+				// Config files don't contain business logic requiring tests
+				'**/nuxt.config.ts',
+				'**/eslint.config.*'
+				// Note: Plugins included in coverage for visibility but testing optional
+				// unless they contain complex business logic
 			],
 			// Coverage thresholds to enforce quality
 			thresholds: {
@@ -37,12 +46,5 @@ export default defineConfig({
 		},
 		// Test timeout
 		testTimeout: 10000
-  },
-  resolve: {
-    alias: {
-      '~': resolve(__dirname, '.'),
-      '@': resolve(__dirname, '.'),
-      '#imports': resolve(__dirname, '.nuxt/imports')
-    }
   }
 })

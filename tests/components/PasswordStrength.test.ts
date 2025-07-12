@@ -18,7 +18,7 @@ describe('PasswordStrength Component', () => {
     })
     
     expect(wrapper.exists()).toBe(true)
-    expect(wrapper.find('.nord-stack').exists()).toBe(true)
+		expect( wrapper.find( 'nord-stack' ).exists() ).toBe( true )
   })
 
   it('should show initial state for empty password', () => {
