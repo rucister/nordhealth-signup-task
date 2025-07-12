@@ -1,15 +1,91 @@
 name: 🧪 Test Suite
 
+# Optimize workflow execution - cancel in-progress runs for PRs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, master, develop ]
+    paths:
+      - '**.ts'
+      - '**.vue'
+      - '**.js'
+      - '**.json'
+      - '**.yml'
+      - '**.yaml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'nuxt.config.ts'
+      - 'tsconfig.json'
+      - 'eslint.config.mjs'
+      - '.github/workflows/**'
   pull_request:
     branches: [ main, master, develop ]
+    paths:
+      - '**.ts'
+      - '**.vue'
+      - '**.js'
+      - '**.json'
+      - '**.yml'
+      - '**.yaml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'nuxt.config.ts'
+      - 'tsconfig.json'
+      - 'eslint.config.mjs'
+      - '.github/workflows/**'
 
 jobs:
+  # Job to detect what changed to skip unnecessary work
+  changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      source: ${{ steps.changes.outputs.source }}
+      tests: ${{ steps.changes.outputs.tests }}
+      config: ${{ steps.changes.outputs.config }}
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔍 Detect file changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            source:
+              - 'components/**'
+              - 'composables/**'
+              - 'pages/**'
+              - 'layouts/**'
+              - 'plugins/**'
+              - 'middleware/**'
+              - 'server/**'
+              - 'utils/**'
+              - 'app.vue'
+              - '**.ts'
+              - '**.vue'
+              - '**.js'
+            tests:
+              - 'tests/**'
+              - '**.test.ts'
+              - '**.spec.ts'
+              - 'vitest.config.ts'
+            config:
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'nuxt.config.ts'
+              - 'tsconfig.json'
+              - 'eslint.config.mjs'
+              - '.github/workflows/**'
+
   test:
     name: 🧪 Run Tests
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.source == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.config == 'true' }}
 
     strategy:
       matrix:
@@ -29,23 +105,17 @@ jobs:
         with:
           version: 8
 
-      - name: 📦 Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: 🗄️ Setup pnpm cache
-        uses: actions/cache@v3
+      - name: �️ Setup Node.js with pnpm cache
+        uses: actions/setup-node@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 🔍 Run linting
+        if: ${{ needs.changes.outputs.source == 'true' || needs.changes.outputs.config == 'true' }}
         run: pnpm run lint
 
       - name: 🧪 Run tests with coverage
@@ -71,21 +141,23 @@ jobs:
   build:
     name: 🏗️ Build Check
     runs-on: ubuntu-latest
-    needs: test
+    needs: [changes, test]
+    if: ${{ needs.changes.outputs.source == 'true' || needs.changes.outputs.config == 'true' }}
 
     steps:
       - name: 📦 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: 📦 Setup pnpm
+      - name: � Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      - name: � Setup Node.js with pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
 
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile

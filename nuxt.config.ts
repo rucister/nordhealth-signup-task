@@ -13,13 +13,14 @@ export default defineNuxtConfig( {
 			htmlAttrs: {
 				class: 'n-reset'
 			}
+			// Preloading handled in useNordTheme composable using resolved URLs
 		}
 	},
 
-	// Global CSS files
+	// Global CSS files - only base theme, others loaded dynamically
 	css: [
 		'@nordhealth/css',
-		'@nordhealth/themes/lib/vet.css',
+		'@nordhealth/themes/lib/vet.css', // Light theme (base)
 		'~/assets/css/main.css'
 	],
 
@@ -27,7 +28,7 @@ export default defineNuxtConfig( {
 	// Configure Vue to recognize Nordhealth custom elements (nord-*)
 	vue: {
 		compilerOptions: {
-			isCustomElement: ( tag: string ) => tag.includes( '-' )
+			isCustomElement: ( tag: string ) => tag.startsWith( 'nord-' )
 		}
 	},
 

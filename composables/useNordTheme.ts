@@ -1,4 +1,9 @@
 import { useColorMode } from '@vueuse/core'
+// Import theme URLs - Vite will resolve these to production-safe paths
+import vetUrl from '@nordhealth/themes/lib/vet.css?url'
+import vetDarkUrl from '@nordhealth/themes/lib/vet-dark.css?url'
+import vetHcUrl from '@nordhealth/themes/lib/vet-high-contrast.css?url'
+import vetDarkHcUrl from '@nordhealth/themes/lib/vet-dark-high-contrast.css?url'
 
 export type NordTheme = 'light' | 'dark' | 'light-hc' | 'dark-hc' | 'auto'
 
@@ -17,14 +22,6 @@ export const useNordTheme = () => {
 		initialValue: 'auto'
 	})
 
-	// Theme to CSS file mapping
-	const themeFiles = {
-		light: 'vet.css',
-		dark: 'vet-dark.css',
-		'light-hc': 'vet-high-contrast.css',
-		'dark-hc': 'vet-dark-high-contrast.css'
-	}
-
 	// Get system theme preference
 	const getSystemTheme = (): 'light' | 'dark' => {
 		if (typeof window === 'undefined') return 'light'
@@ -39,41 +36,37 @@ export const useNordTheme = () => {
 		return mode.value as Exclude<NordTheme, 'auto'>
 	})
 
-	// Apply theme by switching CSS files
+	// Theme URL mapping - production-safe paths from Vite
+	const themeUrls = {
+		light: vetUrl,
+		dark: vetDarkUrl,
+		'light-hc': vetHcUrl,
+		'dark-hc': vetDarkHcUrl
+	}
+
+	// Apply theme by loading CSS dynamically
 	const applyTheme = (theme: Exclude<NordTheme, 'auto'>) => {
 		if (typeof document === 'undefined') return
 
-		// Remove existing dynamic theme links
-		const existingThemes = document.querySelectorAll('link[data-nord-theme-file]')
-		existingThemes.forEach(link => link.remove())
+		// Remove existing theme links
+		const existingLinks = document.querySelectorAll( 'link[data-nord-theme]' )
+		existingLinks.forEach( link => link.remove() )
 
-		// For light theme, rely on the static import from plugin
-		if (theme === 'light') {
-			return
-		}
-
-		// For non-light themes, load dynamically
-		const themeFile = themeFiles[theme]
+		// Add new theme link
 		const link = document.createElement('link')
 		link.rel = 'stylesheet'
-		link.href = `/_nuxt/node_modules/@nordhealth/themes/lib/${themeFile}`
-		link.setAttribute('data-nord-theme-file', theme)
-
-		// Insert after CSS framework
-		const head = document.head
-		const cssFramework = document.querySelector('link[href*="@nordhealth/css"]')
-
-		if (cssFramework) {
-			cssFramework.insertAdjacentElement('afterend', link)
-		} else {
-			head.appendChild(link)
-		}
+		link.href = themeUrls[theme]
+		link.setAttribute( 'data-nord-theme', 'true' )
+		document.head.appendChild( link )
 	}
 
 	// Watch for theme changes and apply them
 	watch(resolvedTheme, (newTheme) => {
 		applyTheme(newTheme)
 	}, { immediate: true })
+
+	// Note: No preloading needed - theme files are small (~3KB each)
+	// and modern browsers cache them efficiently after first load
 
 	// Listen for system theme changes when in auto mode
 	if (typeof window !== 'undefined') {
