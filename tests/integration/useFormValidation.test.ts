@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useFormValidation } from '~/composables/useFormValidation'
-import { validateRequired, validateEmail, validatePassword, validatePasswordConfirmation } from '~/utils/validation'
+import { validateRequired, validateEmail, validatePassword, validatePasswordConfirmation } from '~/utils/validation-utils'
 
 // Mock the debounce utility
 vi.mock('~/utils/validation', async () => {

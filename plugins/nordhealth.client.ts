@@ -21,6 +21,7 @@ import '@nordhealth/components/lib/Dropdown'
 import '@nordhealth/components/lib/DropdownGroup'
 import '@nordhealth/components/lib/DropdownItem'
 import '@nordhealth/components/lib/Checkbox'
+import '@nordhealth/components/lib/Banner'
 // Note: Form components might be separate (like nord-form, nord-fieldset, etc.)
 // We'll add them as we identify the specific form components needed
 

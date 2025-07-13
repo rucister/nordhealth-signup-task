@@ -35,7 +35,7 @@ describe('PasswordStrength Component', () => {
       expect(bar.classes()).not.toContain('active')
     })
     
-    expect(wrapper.find('.strength-label').text()).toBe('Enter a strong password-0')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Enter a strong password' )
   })
 
   it('should show weak strength for short password', () => {
@@ -52,7 +52,7 @@ describe('PasswordStrength Component', () => {
       expect(bars[i].classes()).not.toContain('active')
     }
     
-    expect(wrapper.find('.strength-label').text()).toBe('Weak-1')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Weak' )
   })
 
   it('should show fair strength for medium password', () => {
@@ -69,7 +69,7 @@ describe('PasswordStrength Component', () => {
     expect(bars[2].classes()).not.toContain('active')
     expect(bars[3].classes()).not.toContain('active')
     
-    expect(wrapper.find('.strength-label').text()).toBe('Fair-2')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Fair' )
   })
 
   it('should show good strength for medium-strong password', () => {
@@ -86,7 +86,7 @@ describe('PasswordStrength Component', () => {
     expect(bars[2].classes()).toContain('active')
     expect(bars[3].classes()).not.toContain('active')
     
-    expect(wrapper.find('.strength-label').text()).toBe('Good-3')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Good' )
   })
 
   it('should show strong strength for very strong password', () => {
@@ -102,7 +102,7 @@ describe('PasswordStrength Component', () => {
       expect(bar.classes()).toContain('active')
     })
     
-    expect(wrapper.find('.strength-label').text()).toBe('Strong-4')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Strong' )
   })
 
   it('should show strong strength for Password123 (4 criteria met)', () => {
@@ -118,7 +118,7 @@ describe('PasswordStrength Component', () => {
       expect(bar.classes()).toContain('active')
     })
     
-    expect(wrapper.find('.strength-label').text()).toBe('Strong-4')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Strong' )
   })
 
   it('should have proper CSS custom properties for colors', () => {
@@ -142,11 +142,11 @@ describe('PasswordStrength Component', () => {
       global: { components: globalComponents }
     })
     
-    expect(wrapper.find('.strength-label').text()).toBe('Weak-1')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Weak' )
     
     await wrapper.setProps({ password: 'StrongPassword123!' })
     
-    expect(wrapper.find('.strength-label').text()).toBe('Strong-4')
+		expect( wrapper.find( '.strength-label' ).text() ).toBe( 'Strong' )
   })
 
   it('should render correct number of strength bars', () => {

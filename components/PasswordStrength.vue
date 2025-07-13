@@ -11,7 +11,7 @@
 		<nord-stack direction="horizontal" gap="xs">
 			<div class="strength-label"
 				:style="{ '--strength-color': getLabelVariant() }">
-				{{ strengthLabels[strength as keyof typeof strengthLabels] }}-{{ strength }}
+				{{ strengthLabels[strength as keyof typeof strengthLabels] }}
 			</div>
 		</nord-stack>
 	</nord-stack>
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { getPasswordStrength } from '~/utils/validation'
+import { getPasswordStrength } from '~/utils/validation-utils'
 
 const props = defineProps<{
 	password: string

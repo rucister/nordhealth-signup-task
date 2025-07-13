@@ -1,27 +1,35 @@
 <template>
 	<div class="auth-container">
-		<div class="auth-card">
-			<h1>Welcome to Nordhealth</h1>
-			<p>You are successfully logged in!</p>
-
+		<nord-empty-state v-if=" showWelcome ">
+			<h1>Welcome to Provet Cloud</h1>
+			<p>You have successfully registered!</p>
 			<div class="user-actions">
-				<p>What would you like to do?</p>
-
-				<div class="action-buttons">
-					<nord-button variant="primary" @click="logout">
+				<nord-stack direction="horizontal" class="action-buttons">
+					<nord-button variant="primary">
+						View profile
+					</nord-button>
+					<nord-button variant="default" @click="logout">
 						Logout
 					</nord-button>
-
-					<NuxtLink to="/theme-test" class="auth-link test">
-						🎨 Test VET Theme
-					</NuxtLink>
+				</nord-stack>
+			</div>
+		</nord-empty-state>
+		<nord-empty-state v-else>
+			<h1>Welcome Back</h1>
+			<p>You are successfully logged in!</p>
+			<div class="user-actions">
+				<div class="action-buttons">
+					<nord-button @click="logout">
+						Logout
+					</nord-button>
 				</div>
 			</div>
-		</div>
+		</nord-empty-state>
 	</div>
 </template>
 
 <script setup lang="ts">
+import '@nordhealth/components/lib/EmptyState'
 // Apply authentication middleware to protect this route
 definePageMeta( {
 	middleware: 'auth'
@@ -29,18 +37,13 @@ definePageMeta( {
 
 // Landing page - entry point for authentication flow
 useHead( {
-	title: 'Welcome - Nordhealth',
-	meta: [
-		{ name: 'description', content: 'Sign in to your Nordhealth account or create a new one.' }
-	]
+	title: 'Dashboard - Provet Cloud',
 } )
 
-// Logout function
-const logout = () => {
-	// Remove authentication flag
-	localStorage.removeItem( 'nordhealth_authenticated' )
+const { logout } = useAuth()
 
-	// Redirect to login page
-	navigateTo( '/login' )
-}
+const showWelcome = computed( () => {
+	return useRoute().query.welcome === 'true'
+} )
+
 </script>

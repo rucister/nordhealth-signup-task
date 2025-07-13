@@ -19,7 +19,8 @@
     "test:unit": "vitest run tests/unit",
     "test:component": "vitest run tests/components",
     "test:integration": "vitest run tests/integration",
-    "test:ci": "vitest run --coverage --reporter=verbose"
+    "test:ci": "vitest run --coverage --reporter=verbose",
+    "generate:types": "openapi-typescript ocks/msw_mocks_openapi.yaml -o types/api.d.ts"
   },
   "dependencies": {
     "@nordhealth/components": "^4.4.0",
@@ -41,6 +42,13 @@
     "@vue/test-utils": "^2.4.6",
     "c8": "^10.1.3",
     "happy-dom": "^18.0.1",
+    "msw": "^2.10.4",
+    "openapi-typescript": "^7.8.0",
     "vitest": "^3.2.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

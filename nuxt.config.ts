@@ -30,11 +30,24 @@ export default defineNuxtConfig( {
 		}
 	},
 
+	runtimeConfig: {
+		public: {
+			apiBase: '/' // or '/' — MSW API mock intercepts it
+		}
+	},
+
 	// Global CSS files - only base theme, others loaded dynamically
 	css: [
 		'@nordhealth/css',
 		'@nordhealth/themes/lib/vet.css', // Light theme (base)
 		'~/assets/css/main.css'
+	],
+
+	components: [
+		{
+			path: "~/components",
+			pathPrefix: false,
+		},
 	],
 
 
