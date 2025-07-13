@@ -76,6 +76,6 @@ import '@nordhealth/components/lib/Divider'
 }
 
 .demo-info-card {
-	max-width: 300px;
+	max-width: 400px;
 }
 </style>
