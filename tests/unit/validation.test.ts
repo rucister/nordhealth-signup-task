@@ -6,7 +6,7 @@ import {
   validateMinLength,
   validatePasswordConfirmation,
   getPasswordStrength
-} from '~/utils/validation'
+} from '~/utils/validation-utils'
 
 describe('Validation Functions', () => {
   describe('validateRequired', () => {

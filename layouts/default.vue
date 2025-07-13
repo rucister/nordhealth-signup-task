@@ -19,9 +19,5 @@
 </template>
 
 <script setup lang="ts">
-// Logout functionality
-const logout = () => {
-	localStorage.removeItem( 'nordhealth_authenticated' )
-	navigateTo( '/login' )
-}
+const { logout } = useAuth()
 </script>

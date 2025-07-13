@@ -1,5 +1,5 @@
 import { ref, reactive, computed, readonly, watch, type Ref, type ComputedRef } from 'vue'
-import { debounce, type FormErrors, type ValidationResult } from '~/utils/validation'
+import { debounce, type FormErrors, type ValidationResult } from '~/utils/validation-utils'
 
 export type ValidationFunction = (value: any) => ValidationResult
 

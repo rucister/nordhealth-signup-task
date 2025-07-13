@@ -4,35 +4,26 @@
 	<nord-stack class="auth-stack">
 		<nord-card padding="l">
 			<h1 slot="header">Sign in to provet cloud</h1>
+			<nord-banner v-if=" loginError " variant="danger" class="n-margin-be-l">
+				Login failed. Check credentials and try again.
+			</nord-banner>
 			<form class="login-form" @submit.prevent="handleLogin">
 				<nord-stack direction="vertical" gap="m">
-					<nord-input
-						id="email"
-						v-model="formData.email"
-						type="email"
-						label="Email"
-						placeholder="Enter your email address"
-						autofocus
-						expand
-						required
-						:error="errors.email || undefined"
-						@blur="handleFieldValidate('email')"
-					/>
+					<nord-input id="email" v-model="formData.email" type="email"
+						label="Email" placeholder="Enter your email address" autofocus
+						expand required :error="errors.email || undefined"
+						@blur="handleFieldValidate( 'email' )" />
 
 					<div class="password">
-						<PasswordInput
-							id="password"
-							v-model="formData.password"
-							placeholder="Enter your password"
-							expand
-							required
+						<PasswordInput id="password" v-model="formData.password"
+							placeholder="Enter your password" expand required
 							:error="errors.password || undefined"
-							@blur="handleFieldValidate('password')"
-						/>
+							@blur="handleFieldValidate( 'password' )" />
 						<NuxtLink to="/forgot-password">Forgot password?</NuxtLink>
 					</div>
 
-					<nord-button variant="primary" type="submit" size="m" :disabled="!isValid">
+					<nord-button variant="primary" type="submit" size="m"
+						:disabled="!isValid">
 						Sign In
 					</nord-button>
 				</nord-stack>
@@ -49,24 +40,27 @@
 </template>
 
 <script setup lang="ts">
-import { validateEmail, validateRequired } from '~/utils/validation'
+import { validateEmail, validateRequired } from '~/utils/validation-utils'
 
 // Use unauthenticated layout
-definePageMeta({
+definePageMeta( {
 	layout: 'unauthenticated',
-})
+	middleware: 'notauth',
+} )
+
+const authService = useAuth()
 
 // Setup form validation
-const { 
-	formData, 
-	errors, 
-	isValid, 
-	validateAll, 
-	handleFieldValidate 
+const {
+	formData,
+	errors,
+	isValid,
+	validateAll,
+	handleFieldValidate
 } = useFormValidation(
-	{ 
-		email: '', 
-		password: '' 
+	{
+		email: '',
+		password: ''
 	},
 	{
 		email: [validateRequired, validateEmail],
@@ -75,29 +69,38 @@ const {
 	{ debounce: 300 }
 )
 
-useHead({
+useHead( {
 	title: 'Sign In - Nordhealth',
 	meta: [
 		{ name: 'description', content: 'Sign in to your Nordhealth account.' },
 	],
-})
+} )
 
 // Login handler with validation
-const handleLogin = () => {
-	if (!validateAll()) {
+const isLoggingIn = ref( false )
+const loginError = ref<StandardApiError | null>( null );
+const handleLogin = async () => {
+	if ( !validateAll() ) {
 		return
 	}
 
-	// In a real app, this would validate credentials with an API
-	// For demo purposes, we'll just set the authentication flag
-	localStorage.setItem('nordhealth_authenticated', 'true')
+	isLoggingIn.value = true
+	loginError.value = null
+	try {
+		await authService.login( {
+			email: formData.email,
+			password: formData.password
+		} )
+		navigateTo( '/' )
+	} catch ( error ) {
+		loginError.value = getError( error as StandardFetchError );
+	} finally {
+		isLoggingIn.value = false
+	}
 
-	// Redirect to homepage (which is now protected)
-	navigateTo('/')
 }
 </script>
 <style scoped>
-
 .password {
 	position: relative;
 }

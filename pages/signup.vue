@@ -1,6 +1,5 @@
 <template>
-	<nord-stack
-class="auth-stack" gap="l" align-items="center"
+	<nord-stack class="auth-stack" gap="l" align-items="center"
 		justify-content="center">
 
 		<!-- Signup form -->
@@ -8,37 +7,45 @@ class="auth-stack" gap="l" align-items="center"
 			<h1 slot="header">
 				Create your account
 			</h1>
-			<form class="signup-form" @submit.prevent="handleSignup">
+
+			<!-- Form for signing up -->
+			<form v-if=" !signupError " class="signup-form"
+				@submit.prevent="handleSignup">
 				<nord-stack gap="l" direction="vertical">
 					<p>
 						Join Provet Cloud and get started with our veterinary healthcare
 						solutions.
 					</p>
-					<nord-input
-v-model="formData.email" type="email" label="Email"
-						placeholder="Enter your email address" :error="errors.email ?? ''"
-						autofocus required expand />
-					<PasswordInput
-v-model="formData.password"
+					<nord-input id="email" name="email" v-model="formData.email"
+						type="email" label="Email" placeholder="Enter your email address"
+						:error="errors.email ?? ''" :disabled="isSubmitting" autofocus
+						required expand />
+					<PasswordInput id="password" v-model="formData.password"
 						v-model:show-password="tshowPassword"
 						placeholder="Create a secure password" :error="errors.password"
-						required />
+						:disabled="isSubmitting" required />
 					<PasswordStrength :password="formData.password" />
-					<PasswordInput
-v-model="formData.confirmPassword"
+					<PasswordInput id="confirmPassword" v-model="formData.confirmPassword"
 						v-model:show-password="tshowPassword"
 						placeholder="Confirm your password" :error="errors.confirmPassword"
-						required />
-					<nord-checkbox
-v-model="formData.subscribeToUpdates"
-						label="Receive occasional product updates and announcements" />
-					<nord-button
-variant="primary" type="submit" size="m"
+						:disabled="isSubmitting" required />
+					<nord-checkbox v-model="formData.subscribeToUpdates"
+						label="Receive occasional product updates and announcements"
+						:disabled="isSubmitting" />
+					<nord-button variant="primary" type="submit" size="m"
 						:loading="isSubmitting">
 						Create Account
 					</nord-button>
 				</nord-stack>
 			</form>
+
+			<!-- Error state -->
+			<nord-stack v-if=" signupError " gap="l" class="error-block">
+				<nord-banner variant="danger">
+					{{ signupError.message }}
+				</nord-banner>
+				<nord-button @click="resetSignup">Try again</nord-button>
+			</nord-stack>
 		</nord-card>
 
 		<!-- Navigation links -->
@@ -52,12 +59,12 @@ variant="primary" type="submit" size="m"
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { validateRequired, validateEmail, validatePassword, validatePasswordConfirmation } from '~/utils/validation'
+import { validateRequired, validateEmail, validatePassword, validatePasswordConfirmation } from '~/utils/validation-utils'
 
 // Use unauthenticated layout
 definePageMeta( {
 	layout: "unauthenticated",
+	middleware: "notauth",
 } );
 
 useHead( {
@@ -77,6 +84,7 @@ const {
 	formData,
 	errors,
 	validateAll,
+	resetForm
 } = useFormValidation(
 	// Initial form data
 	{
@@ -96,9 +104,14 @@ const {
 	}
 );
 
+
+const { signup } = useAuth()
+
 const isSubmitting = ref( false );
+const signupError = ref<StandardApiError | null>( null );
 // Form submission
 const handleSignup = async () => {
+	// * Breake the flow if validation fails
 	if ( !validateAll() ) {
 		return;
 	}
@@ -107,22 +120,31 @@ const handleSignup = async () => {
 
 	try {
 		// Simulate API call
-		await new Promise( resolve => setTimeout( resolve, 1000 ) );
-
-		// In a real app, you would make an API call here
-		console.log( "Account created:", formData );
-
-		// Redirect to success page
-		await navigateTo( "/success" );
+		await signup( {
+			email: formData.email,
+			password: formData.password,
+			passwordConfirmation: formData.confirmPassword,
+			subscribeToUpdates: formData.subscribeToUpdates
+		} );
 	}
 	catch ( error ) {
-		console.error( "Signup failed:", error );
-		// Handle error (show toast, etc.)
+		signupError.value = getError( error as StandardFetchError );
 	}
 	finally {
 		isSubmitting.value = false;
 	}
 };
 
+const resetSignup = () => {
+	resetForm();
+	signupError.value = null;
+};
+
 
 </script>
+<style scoped>
+.error-message {
+	--n-color-text: var(--n-color-text-error);
+	color: var(--n-color-text-error);
+}
+</style>
