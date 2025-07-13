@@ -7,7 +7,17 @@ A modern, accessible authentication system built with Nuxt 3 and the Nordhealth 
 ### 🔐 Authentication Pages
 - **Login Page** (`/login`) - Clean, accessible sign-in form
 - **Signup Page** (`/signup`) - Registration with advanced validation
+- **Forgot Password Page** (`/forgot-password`) - Password reset functionality
+- **Dashboard Page** (`/`) - Protected dashboard with welcome flow
 - **Responsive Design** - Works seamlessly across all devices
+
+### 🔒 Authentication System
+- **Authentication composable** (`useAuth`) - Centralized auth state management
+- **Token management** with localStorage persistence
+- **Login/Signup/Logout** functionality with automatic redirects
+- **Password reset** capability via forgot password
+- **Authentication state** with reactive `isLoggedIn` computed property
+- **Route protection** with authentication middleware
 
 ### ✨ Form Validation System
 - **Real-time validation** with debouncing (300ms)
@@ -32,29 +42,59 @@ A modern, accessible authentication system built with Nuxt 3 and the Nordhealth 
 ## Tech Stack
 
 - **Framework**: Nuxt 3 (Vue 3 + TypeScript)
+- **Authentication**: Custom composable with token-based auth
+- **API Integration**: Custom `$apiClient` with type safety
 - **Design System**: Nordhealth Design System
 - **Styling**: CSS with Nord design tokens
 - **Validation**: Custom composable with reactive validation
-- **State Management**: Vue 3 Composition API
+- **State Management**: Vue 3 Composition API with `useState`
+- **Mocking**: MSW (Mock Service Worker) for API simulation
 - **Testing**: Vitest + @vue/test-utils + happy-dom (46 comprehensive tests with 80% coverage)
 
 ## Project Structure
 
 ```
 ├── components/
+│   ├── DemoInfo.vue           # Demo credentials and information
+│   ├── EmailInput.vue         # Email input component
+│   ├── Logo.vue              # Application logo
 │   ├── PasswordInput.vue      # Password input with toggle visibility
-│   └── PasswordStrength.vue   # Password strength indicator
+│   ├── PasswordStrength.vue   # Password strength indicator
+│   └── ThemeSwitcher.vue      # Theme switching component
 ├── composables/
-│   └── useFormValidation.ts   # Centralized form validation
+│   ├── useAuth.ts             # Authentication state management
+│   ├── useFormValidation.ts   # Centralized form validation
+│   └── useNordTheme.ts        # Theme management
 ├── layouts/
+│   ├── default.vue            # Authenticated layout
 │   └── unauthenticated.vue    # Layout for auth pages
 ├── pages/
+│   ├── forgot-password.vue    # Password reset page
+│   ├── index.vue              # Protected dashboard
 │   ├── login.vue              # Login page
-│   └── signup.vue             # Signup page
-├── utils/
-│   └── validation.ts          # Validation function library
-└── middleware/
-    └── auth.ts                # Authentication middleware
+│   ├── signup.vue             # Signup page
+│   └── success.vue            # Success page (placeholder)
+├── middleware/
+│   ├── auth.ts                # Authentication middleware
+│   └── notauth.ts             # Redirect authenticated users
+├── mocks/
+│   ├── handlers.ts            # MSW API handlers
+│   ├── login.ts               # Login API mocks
+│   ├── signup.ts              # Signup API mocks
+│   ├── logout.ts              # Logout API mocks
+│   └── forgot.ts              # Password reset mocks
+├── plugins/
+│   ├── apiClient.client.ts    # API client configuration
+│   ├── msw.client.ts          # MSW setup
+│   └── nordhealth.client.ts   # Nordhealth components
+├── types/
+│   ├── auth.ts                # Authentication type definitions
+│   ├── api.d.ts               # API type definitions
+│   └── global.d.ts            # Global type definitions
+└── utils/
+    ├── error-utils.ts         # Error handling utilities
+    ├── validation.ts          # Validation function library
+    └── validation-utils.ts    # Additional validation helpers
 ```
 
 ## Validation Features
@@ -75,6 +115,41 @@ const { formData, errors, isValid, validateAll, handleFieldValidate } = useFormV
   { debounce: 300 }
 )
 ```
+
+### Authentication Composable
+```typescript
+const { token, isLoggedIn, login, signup, logout, forgotPassword } = useAuth()
+
+// Login user
+await login({ email: 'user@example.com', password: 'password' })
+
+// Register new user
+await signup({ 
+  email: 'user@example.com', 
+  password: 'password',
+  passwordConfirmation: 'password',
+  subscribeToUpdates: false 
+})
+
+// Logout user
+await logout()
+
+// Reset password
+await forgotPassword({ email: 'user@example.com' })
+```
+
+## API Integration
+
+### Mock Service Worker (MSW)
+- **API simulation** for development and testing
+- **Realistic responses** with error scenarios
+- **Demo credentials** for testing different flows
+- **Random failures** to simulate real-world conditions
+
+### Demo Credentials
+- **Login**: `test@example.com` / `password123`
+- **Existing user error**: `already@exists.com` / `any_password`
+- **Forgot password**: `test@example.com`
 
 ## Setup
 
